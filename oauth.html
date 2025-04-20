@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>登入中...</title>
+  <script>
+    async function fetchUser(token) {
+      const res = await fetch("https://discord.com/api/users/@me", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await res.json();
+      document.body.innerHTML = `
+        <h1>你好，${data.username}#${data.discriminator}</h1>
+        <img src="https://cdn.discordapp.com/avatars/${data.id}/${data.avatar}.png" width="100" style="border-radius:50%">
+        <p>登入成功！你可以關閉這個視窗。</p>
+      `;
+    }
+
+    window.onload = () => {
+      const hash = new URLSearchParams(window.location.hash.substring(1));
+      const accessToken = hash.get('access_token');
+      if (accessToken) {
+        fetchUser(accessToken);
+      } else {
+        document.body.innerHTML = "<h2>登入失敗，請再試一次。</h2>";
+      }
+    };
+  </script>
+</head>
+<body style="background:#0f0c29; color:white; text-align:center; padding:50px;">
+  <h2>正在登入中...</h2>
+</body>
+</html>
